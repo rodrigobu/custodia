@@ -21,6 +21,8 @@ class Veiculo(models.Model):
     valor = models.DecimalField(max_digits=12, decimal_places=2)
     total = models.DecimalField(max_digits=12, decimal_places=2, editable=False, default=0)
     imagem_url = models.URLField(max_length=500, blank=True, default="")
+    imagem_url_2 = models.URLField(max_length=500, blank=True, default="")
+    imagem_url_3 = models.URLField(max_length=500, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

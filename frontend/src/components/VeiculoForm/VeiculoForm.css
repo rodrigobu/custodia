@@ -88,3 +88,27 @@
   border-radius: 4px;
   margin-bottom: 1rem;
 }
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.photo-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.photo-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .photos-grid {
+    grid-template-columns: 1fr;
+  }
+}

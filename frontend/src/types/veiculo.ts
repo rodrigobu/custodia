@@ -11,6 +11,8 @@ export interface Veiculo {
   valor: string;
   total: string;
   imagem_url: string;
+  imagem_url_2: string;
+  imagem_url_3: string;
   created_at: string;
   updated_at: string;
 }
@@ -24,6 +26,8 @@ export interface VeiculoCreate {
   status: Status;
   valor: string;
   imagem_url?: string;
+  imagem_url_2?: string;
+  imagem_url_3?: string;
 }
 
 export interface VeiculoUpdate {
@@ -35,6 +39,8 @@ export interface VeiculoUpdate {
   status?: Status;
   valor?: string;
   imagem_url?: string;
+  imagem_url_2?: string;
+  imagem_url_3?: string;
 }
 
 export interface VeiculoFilters {

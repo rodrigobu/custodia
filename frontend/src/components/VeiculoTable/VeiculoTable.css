@@ -24,8 +24,12 @@
   font-weight: 600;
 }
 
-.veiculo-table tr:hover {
-  background: #f8f9fa;
+.veiculo-table tr.clickable-row {
+  cursor: pointer;
+}
+
+.veiculo-table tr.clickable-row:hover {
+  background: #e8ecf4;
 }
 
 .status-badge {
@@ -82,9 +86,14 @@
   background: #c1121f;
 }
 
+.thumbnails {
+  display: flex;
+  gap: 4px;
+}
+
 .veiculo-thumbnail {
-  width: 60px;
-  height: 45px;
+  width: 45px;
+  height: 35px;
   object-fit: cover;
   border-radius: 4px;
 }

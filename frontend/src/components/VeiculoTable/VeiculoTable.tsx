@@ -41,39 +41,46 @@ export function VeiculoTable({ veiculos, loading, onEdit, onDelete }: VeiculoTab
           </tr>
         </thead>
         <tbody>
-          {veiculos.map((v) => (
-            <tr key={v.id}>
-              <td>
-                {v.imagem_url ? (
-                  <img
-                    src={v.imagem_url}
-                    alt={v.veiculo}
-                    className="veiculo-thumbnail"
-                  />
-                ) : (
-                  <span className="no-image">Sem foto</span>
-                )}
-              </td>
-              <td>{v.placa}</td>
-              <td>{v.veiculo}</td>
-              <td>{new Date(v.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
-              <td>{v.local}</td>
-              <td>{v.acessoria}</td>
-              <td>
-                <span className={`status-badge status-${v.status}`}>
-                  {STATUS_LABELS[v.status] || v.status}
-                </span>
-              </td>
-              <td>{Number(v.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
-              <td>{Number(v.total).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
-              <td>
-                <div className="actions">
-                  <button className="btn-edit" onClick={() => onEdit(v)}>Editar</button>
-                  <button className="btn-delete" onClick={() => onDelete(v.id)}>Excluir</button>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {veiculos.map((v) => {
+            const fotos = [v.imagem_url, v.imagem_url_2, v.imagem_url_3].filter(Boolean);
+            return (
+              <tr key={v.id} className="clickable-row" onClick={() => onEdit(v)}>
+                <td>
+                  {fotos.length > 0 ? (
+                    <div className="thumbnails">
+                      {fotos.map((url, i) => (
+                        <img
+                          key={i}
+                          src={url}
+                          alt={`${v.veiculo} foto ${i + 1}`}
+                          className="veiculo-thumbnail"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="no-image">Sem foto</span>
+                  )}
+                </td>
+                <td>{v.placa}</td>
+                <td>{v.veiculo}</td>
+                <td>{new Date(v.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>
+                <td>{v.local}</td>
+                <td>{v.acessoria}</td>
+                <td>
+                  <span className={`status-badge status-${v.status}`}>
+                    {STATUS_LABELS[v.status] || v.status}
+                  </span>
+                </td>
+                <td>{Number(v.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
+                <td>{Number(v.total).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
+                <td>
+                  <div className="actions">
+                    <button className="btn-delete" onClick={(e) => { e.stopPropagation(); onDelete(v.id); }}>Excluir</button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
