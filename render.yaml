@@ -5,14 +5,13 @@ databases:
     user: custodia_user
 
 services:
-  # Backend - Django API
+  # Backend - Django API (Docker)
   - type: web
     name: custodia-api
-    runtime: python
+    runtime: docker
     plan: free
-    rootDir: backend
-    buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: gunicorn config.wsgi
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -26,8 +25,6 @@ services:
         sync: false
       - key: DEBUG
         value: "False"
-      - key: PYTHON_VERSION
-        value: "3.12.0"
 
   # Frontend - React/Vite Static Site
   - type: web
