@@ -61,3 +61,26 @@
   font-size: 0.75rem;
   color: #e63946;
 }
+
+.upload-area-url {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.url-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: #4361ee;
+}
