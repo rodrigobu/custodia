@@ -12,7 +12,7 @@ class VeiculoCreateSchema(Schema):
     acessoria: str
     status: str = "apreendido"
     valor: Decimal
-    imagem_url: str = ""
+    imagens: list[str] = []
 
 
 class VeiculoUpdateSchema(Schema):
@@ -23,7 +23,7 @@ class VeiculoUpdateSchema(Schema):
     acessoria: str | None = None
     status: str | None = None
     valor: Decimal | None = None
-    imagem_url: str | None = None
+    imagens: list[str] | None = None
 
 
 class VeiculoResponseSchema(Schema):
@@ -36,7 +36,7 @@ class VeiculoResponseSchema(Schema):
     status: str
     valor: Decimal
     total: Decimal
-    imagem_url: str
+    imagens: list[str]
     created_at: str
     updated_at: str
 

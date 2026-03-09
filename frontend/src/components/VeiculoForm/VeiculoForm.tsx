@@ -17,7 +17,7 @@ const emptyForm: VeiculoCreate = {
   acessoria: "",
   status: "apreendido",
   valor: "",
-  imagem_url: "",
+  imagens: [],
 };
 
 export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProps) {
@@ -31,7 +31,7 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           acessoria: initialData.acessoria,
           status: initialData.status,
           valor: initialData.valor,
-          imagem_url: initialData.imagem_url || "",
+          imagens: initialData.imagens || [],
         }
       : emptyForm
   );
@@ -146,10 +146,10 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           />
         </div>
         <div className="form-group form-group-full">
-          <label>Foto do Veículo</label>
+          <label>Fotos do Veículo (opcional, até 3)</label>
           <ImageUpload
-            value={form.imagem_url || ""}
-            onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
+            value={form.imagens || []}
+            onChange={(urls) => setForm((prev) => ({ ...prev, imagens: urls }))}
           />
         </div>
       </div>

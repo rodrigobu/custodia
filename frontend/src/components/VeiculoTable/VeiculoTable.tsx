@@ -44,9 +44,9 @@ export function VeiculoTable({ veiculos, loading, onEdit, onDelete }: VeiculoTab
           {veiculos.map((v) => (
             <tr key={v.id}>
               <td>
-                {v.imagem_url ? (
+                {v.imagens && v.imagens.length > 0 ? (
                   <img
-                    src={v.imagem_url}
+                    src={v.imagens[0]}
                     alt={v.veiculo}
                     className="veiculo-thumbnail"
                   />

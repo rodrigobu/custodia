@@ -16,7 +16,7 @@ const mockVeiculo: Veiculo = {
   status: "apreendido",
   valor: "10000.00",
   total: "10000.00",
-  imagem_url: "",
+  imagens: [],
   created_at: "",
   updated_at: "",
 };

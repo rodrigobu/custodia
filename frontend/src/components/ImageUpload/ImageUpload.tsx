@@ -2,8 +2,9 @@ import { useRef, useState, useCallback } from "react";
 import "./ImageUpload.css";
 
 interface ImageUploadProps {
-  value: string;
-  onChange: (url: string) => void;
+  value: string[];
+  onChange: (urls: string[]) => void;
+  max?: number;
 }
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "";
@@ -70,16 +71,16 @@ function compressImage(file: File): Promise<Blob> {
   });
 }
 
-export function ImageUpload({ value, onChange }: ImageUploadProps) {
+export function ImageUpload({ value, onChange, max = 3 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState(false);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const images = value.filter(Boolean);
+  const canAddMore = images.length < max;
 
+  const uploadFile = async (file: File) => {
     if (!file.type.startsWith("image/")) {
       setError("Selecione um arquivo de imagem");
       return;
@@ -87,6 +88,11 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
 
     if (file.size > 10 * 1024 * 1024) {
       setError("Imagem deve ter no máximo 10MB");
+      return;
+    }
+
+    if (!canAddMore) {
+      setError(`Máximo de ${max} fotos permitido`);
       return;
     }
 
@@ -111,7 +117,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       }
 
       const data = await response.json();
-      onChange(data.secure_url);
+      onChange([...images, data.secure_url]);
     } catch {
       setError("Erro ao fazer upload da imagem");
     } finally {
@@ -122,11 +128,15 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
     }
   };
 
-  const handleRemove = () => {
-    onChange("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await uploadFile(file);
+  };
+
+  const handleRemove = (index: number) => {
+    const updated = images.filter((_, i) => i !== index);
+    onChange(updated);
   };
 
   const handleDrop = useCallback(
@@ -135,14 +145,11 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       e.stopPropagation();
       const file = e.dataTransfer.files?.[0];
       if (file && file.type.startsWith("image/")) {
-        const fakeEvent = {
-          target: { files: [file] },
-        } as unknown as React.ChangeEvent<HTMLInputElement>;
-        await handleFileChange(fakeEvent);
+        await uploadFile(file);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [images.length]
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -150,110 +157,137 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
     e.stopPropagation();
   }, []);
 
-  const renderPreview = () => (
-    <>
-      <div className="image-preview">
-        <img
-          src={value}
-          alt="Veículo"
-          onClick={() => setExpanded(true)}
-          title="Clique para ampliar"
-        />
-        <div className="image-preview-actions">
-          <button
-            type="button"
-            className="btn-zoom-image"
-            onClick={() => setExpanded(true)}
-            title="Ampliar"
-          >
-            &#x1F50D;
-          </button>
-          <button
-            type="button"
-            className="btn-remove-image"
-            onClick={handleRemove}
-            title="Remover"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-
-      {expanded && (
-        <div className="image-overlay" onClick={() => setExpanded(false)}>
-          <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
-            <img src={value} alt="Veículo ampliado" />
-            <button
-              type="button"
-              className="btn-close-overlay"
-              onClick={() => setExpanded(false)}
-            >
-              ✕ Fechar
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-
-  if (!CLOUDINARY_CONFIGURED) {
-    return (
-      <div className="image-upload">
-        {value ? (
-          renderPreview()
-        ) : (
-          <div className="upload-area-url">
-            <input
-              type="url"
-              placeholder="Cole a URL da imagem"
-              className="url-input"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  const target = e.target as HTMLInputElement;
-                  if (target.value) onChange(target.value);
+  const renderUploadButton = () => {
+    if (!CLOUDINARY_CONFIGURED) {
+      return (
+        <div className="upload-area-url">
+          <input
+            type="url"
+            placeholder="Cole a URL da imagem"
+            className="url-input"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                const target = e.target as HTMLInputElement;
+                if (target.value) {
+                  onChange([...images, target.value]);
+                  target.value = "";
                 }
-              }}
-              onBlur={(e) => {
-                if (e.target.value) onChange(e.target.value);
-              }}
-            />
-            <span className="upload-label">
-              Insira a URL da imagem ou configure o Cloudinary para upload direto
-            </span>
-          </div>
-        )}
-      </div>
+              }
+            }}
+            onBlur={(e) => {
+              if (e.target.value) {
+                onChange([...images, e.target.value]);
+                e.target.value = "";
+              }
+            }}
+          />
+          <span className="upload-label">
+            Insira a URL da imagem ou configure o Cloudinary para upload direto
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <label
+        className="upload-area upload-area-small"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          disabled={uploading}
+        />
+        <div className="upload-area-content">
+          <span className="upload-icon">📷</span>
+          <span className="upload-label">
+            {uploading ? "Comprimindo e enviando..." : "Adicionar foto"}
+          </span>
+          <span className="upload-hint">
+            {images.length}/{max} fotos
+          </span>
+        </div>
+      </label>
     );
-  }
+  };
 
   return (
     <div className="image-upload">
-      {value ? (
-        renderPreview()
-      ) : (
-        <label
-          className="upload-area"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-          <div className="upload-area-content">
-            <span className="upload-icon">📷</span>
-            <span className="upload-label">
-              {uploading ? "Comprimindo e enviando..." : "Clique ou arraste uma foto"}
-            </span>
-            <span className="upload-hint">JPG, PNG até 10MB — será comprimida automaticamente</span>
+      <div className="image-grid">
+        {images.map((url, index) => (
+          <div key={index} className="image-preview">
+            <img
+              src={url}
+              alt={`Veículo foto ${index + 1}`}
+              onClick={() => setExpandedIndex(index)}
+              title="Clique para ampliar"
+            />
+            <div className="image-preview-actions">
+              <button
+                type="button"
+                className="btn-zoom-image"
+                onClick={() => setExpandedIndex(index)}
+                title="Ampliar"
+              >
+                &#x1F50D;
+              </button>
+              <button
+                type="button"
+                className="btn-remove-image"
+                onClick={() => handleRemove(index)}
+                title="Remover"
+              >
+                ✕
+              </button>
+            </div>
           </div>
-        </label>
-      )}
+        ))}
+
+        {canAddMore && renderUploadButton()}
+      </div>
+
       {error && <span className="upload-error">{error}</span>}
+
+      {expandedIndex !== null && (
+        <div className="image-overlay" onClick={() => setExpandedIndex(null)}>
+          <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
+            <img src={images[expandedIndex]} alt="Veículo ampliado" />
+            <div className="image-overlay-nav">
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  className="btn-nav-overlay"
+                  disabled={expandedIndex === 0}
+                  onClick={() => setExpandedIndex(expandedIndex - 1)}
+                >
+                  ← Anterior
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn-close-overlay"
+                onClick={() => setExpandedIndex(null)}
+              >
+                ✕ Fechar
+              </button>
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  className="btn-nav-overlay"
+                  disabled={expandedIndex === images.length - 1}
+                  onClick={() => setExpandedIndex(expandedIndex + 1)}
+                >
+                  Próxima →
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

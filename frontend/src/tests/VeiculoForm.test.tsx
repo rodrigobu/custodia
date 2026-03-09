@@ -31,7 +31,7 @@ describe("VeiculoForm", () => {
       status: "apreendido" as const,
       valor: "10000.00",
       total: "10000.00",
-      imagem_url: "",
+      imagens: [],
       created_at: "",
       updated_at: "",
     };
