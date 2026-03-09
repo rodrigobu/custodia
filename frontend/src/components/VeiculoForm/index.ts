@@ -1,0 +1,1 @@
+export { VeiculoForm } from "./VeiculoForm";

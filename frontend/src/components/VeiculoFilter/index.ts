@@ -1,0 +1,1 @@
+export { VeiculoFilter } from "./VeiculoFilter";

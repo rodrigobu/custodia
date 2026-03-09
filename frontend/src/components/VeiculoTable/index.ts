@@ -1,0 +1,1 @@
+export { VeiculoTable } from "./VeiculoTable";

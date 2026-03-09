@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(flake8 --max-line-length=120 --exclude=migrations,__pycache__,.venv .)",
+      "Bash(mypy --ignore-missing-imports --exclude migrations .)",
+      "Bash(python:*)",
+      "Bash(node:*)",
+      "Bash(python3:*)",
+      "Bash(npm install:*)",
+      "Bash(source:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npx:*)",
+      "Bash(chmod +x:*)"
+    ]
+  }
+}
