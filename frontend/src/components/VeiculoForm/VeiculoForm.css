@@ -81,6 +81,10 @@
   background: #5a6268 !important;
 }
 
+.required {
+  color: #e63946;
+}
+
 .form-error {
   background: #f8d7da;
   color: #842029;

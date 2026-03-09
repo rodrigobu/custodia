@@ -44,6 +44,10 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.imagem_url) {
+      setError("Adicione uma foto ou URL da imagem do veículo.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -146,7 +150,7 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           />
         </div>
         <div className="form-group form-group-full">
-          <label>Foto do Veículo</label>
+          <label>Foto do Veículo <span className="required">*</span></label>
           <ImageUpload
             value={form.imagem_url || ""}
             onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
