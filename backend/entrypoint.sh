@@ -2,8 +2,16 @@
 set -e
 
 if [ -z "$DATABASE_URL" ]; then
-    echo "WARNING: DATABASE_URL is not set. Check your Render environment variables."
-    echo "The database service may not be provisioned yet."
+    echo "ERROR: DATABASE_URL is not set."
+    echo ""
+    echo "If deploying on Render:"
+    echo "  1. Ensure the PostgreSQL database service is created and active"
+    echo "  2. Check that DATABASE_URL is linked via 'fromDatabase' in render.yaml"
+    echo "  3. Or manually set DATABASE_URL in the Render dashboard under Environment"
+    echo "  4. Note: Render free-tier databases expire after 90 days"
+    echo ""
+    echo "If running locally:"
+    echo "  export DATABASE_URL=postgres://postgres:postgres@localhost:5432/custodia"
     exit 1
 fi
 

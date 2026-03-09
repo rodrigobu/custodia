@@ -12,6 +12,7 @@ services:
     plan: free
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
+    preDeployCommand: "python manage.py migrate"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
