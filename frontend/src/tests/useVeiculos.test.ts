@@ -17,6 +17,8 @@ const mockVeiculo: Veiculo = {
   valor: "10000.00",
   total: "10000.00",
   imagem_url: "",
+  imagem_url_2: "",
+  imagem_url_3: "",
   created_at: "",
   updated_at: "",
 };

@@ -16,6 +16,8 @@ const mockVeiculos: Veiculo[] = [
     valor: "15000.00",
     total: "15000.00",
     imagem_url: "",
+    imagem_url_2: "",
+    imagem_url_3: "",
     created_at: "2024-01-15T10:00:00Z",
     updated_at: "2024-01-15T10:00:00Z",
   },
@@ -30,6 +32,8 @@ const mockVeiculos: Veiculo[] = [
     valor: "30000.00",
     total: "45000.00",
     imagem_url: "",
+    imagem_url_2: "",
+    imagem_url_3: "",
     created_at: "2024-02-20T10:00:00Z",
     updated_at: "2024-02-20T10:00:00Z",
   },
@@ -60,13 +64,14 @@ describe("VeiculoTable", () => {
     expect(screen.getByText("Liberado")).toBeInTheDocument();
   });
 
-  it("calls onEdit when edit button is clicked", async () => {
+  it("calls onEdit when row is clicked", async () => {
     const user = userEvent.setup();
     const onEdit = vi.fn();
     render(<VeiculoTable veiculos={mockVeiculos} loading={false} onEdit={onEdit} onDelete={vi.fn()} />);
 
-    const editButtons = screen.getAllByText("Editar");
-    await user.click(editButtons[0]);
+    const rows = screen.getAllByRole("row");
+    // rows[0] is thead, rows[1] is the first data row
+    await user.click(rows[1]);
     expect(onEdit).toHaveBeenCalledWith(mockVeiculos[0]);
   });
 

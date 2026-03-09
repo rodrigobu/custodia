@@ -18,6 +18,8 @@ const emptyForm: VeiculoCreate = {
   status: "apreendido",
   valor: "",
   imagem_url: "",
+  imagem_url_2: "",
+  imagem_url_3: "",
 };
 
 export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProps) {
@@ -32,6 +34,8 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           status: initialData.status,
           valor: initialData.valor,
           imagem_url: initialData.imagem_url || "",
+          imagem_url_2: initialData.imagem_url_2 || "",
+          imagem_url_3: initialData.imagem_url_3 || "",
         }
       : emptyForm
   );
@@ -146,11 +150,30 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           />
         </div>
         <div className="form-group form-group-full">
-          <label>Foto do Veículo</label>
-          <ImageUpload
-            value={form.imagem_url || ""}
-            onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
-          />
+          <label>Fotos do Veículo (opcional)</label>
+          <div className="photos-grid">
+            <div className="photo-slot">
+              <span className="photo-label">Foto 1</span>
+              <ImageUpload
+                value={form.imagem_url || ""}
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
+              />
+            </div>
+            <div className="photo-slot">
+              <span className="photo-label">Foto 2</span>
+              <ImageUpload
+                value={form.imagem_url_2 || ""}
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url_2: url }))}
+              />
+            </div>
+            <div className="photo-slot">
+              <span className="photo-label">Foto 3</span>
+              <ImageUpload
+                value={form.imagem_url_3 || ""}
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url_3: url }))}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
