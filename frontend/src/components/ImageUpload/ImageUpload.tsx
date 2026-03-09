@@ -6,9 +6,10 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
 }
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "";
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "";
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim() || "";
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET?.trim() || "";
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+const isCloudinaryConfigured = CLOUD_NAME.length > 0 && UPLOAD_PRESET.length > 0;
 
 export function ImageUpload({ value, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
@@ -29,7 +30,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       return;
     }
 
-    if (!CLOUD_NAME || !UPLOAD_PRESET) {
+    if (!isCloudinaryConfigured) {
       setError("Cloudinary não configurado. Verifique as variáveis de ambiente.");
       return;
     }
@@ -81,18 +82,23 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
           </button>
         </div>
       ) : (
-        <label className="upload-area">
+        <label className={`upload-area${!isCloudinaryConfigured ? " upload-disabled" : ""}`}>
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            disabled={uploading}
+            disabled={uploading || !isCloudinaryConfigured}
           />
           <span className="upload-label">
             {uploading ? "Enviando..." : "Clique para adicionar foto"}
           </span>
         </label>
+      )}
+      {!isCloudinaryConfigured && (
+        <span className="upload-error">
+          Cloudinary não configurado. Verifique as variáveis de ambiente VITE_CLOUDINARY_CLOUD_NAME e VITE_CLOUDINARY_UPLOAD_PRESET.
+        </span>
       )}
       {error && <span className="upload-error">{error}</span>}
     </div>
