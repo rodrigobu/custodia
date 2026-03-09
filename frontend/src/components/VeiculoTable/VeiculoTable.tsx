@@ -28,6 +28,7 @@ export function VeiculoTable({ veiculos, loading, onEdit, onDelete }: VeiculoTab
       <table className="veiculo-table">
         <thead>
           <tr>
+            <th>Foto</th>
             <th>Placa</th>
             <th>Veículo</th>
             <th>Data</th>
@@ -42,6 +43,17 @@ export function VeiculoTable({ veiculos, loading, onEdit, onDelete }: VeiculoTab
         <tbody>
           {veiculos.map((v) => (
             <tr key={v.id}>
+              <td>
+                {v.imagem_url ? (
+                  <img
+                    src={v.imagem_url}
+                    alt={v.veiculo}
+                    className="veiculo-thumbnail"
+                  />
+                ) : (
+                  <span className="no-image">Sem foto</span>
+                )}
+              </td>
               <td>{v.placa}</td>
               <td>{v.veiculo}</td>
               <td>{new Date(v.data + "T00:00:00").toLocaleDateString("pt-BR")}</td>

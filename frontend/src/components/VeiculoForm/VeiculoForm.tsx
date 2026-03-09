@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { VeiculoCreate, Veiculo } from "../../types/veiculo";
+import { ImageUpload } from "../ImageUpload";
 import "./VeiculoForm.css";
 
 interface VeiculoFormProps {
@@ -16,6 +17,7 @@ const emptyForm: VeiculoCreate = {
   acessoria: "",
   status: "apreendido",
   valor: "",
+  imagem_url: "",
 };
 
 export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProps) {
@@ -29,6 +31,7 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
           acessoria: initialData.acessoria,
           status: initialData.status,
           valor: initialData.valor,
+          imagem_url: initialData.imagem_url || "",
         }
       : emptyForm
   );
@@ -140,6 +143,13 @@ export function VeiculoForm({ onSubmit, initialData, onCancel }: VeiculoFormProp
             onChange={handleChange}
             placeholder="0.00"
             required
+          />
+        </div>
+        <div className="form-group form-group-full">
+          <label>Foto do Veículo</label>
+          <ImageUpload
+            value={form.imagem_url || ""}
+            onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
           />
         </div>
       </div>

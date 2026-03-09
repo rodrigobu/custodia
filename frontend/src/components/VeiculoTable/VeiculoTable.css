@@ -82,6 +82,18 @@
   background: #c1121f;
 }
 
+.veiculo-thumbnail {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.no-image {
+  font-size: 0.7rem;
+  color: #999;
+}
+
 .loading,
 .empty {
   text-align: center;
