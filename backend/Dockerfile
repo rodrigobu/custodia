@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --no-input
+RUN DATABASE_URL=sqlite:///tmp/build_db.sqlite3 python manage.py collectstatic --no-input
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
