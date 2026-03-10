@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 import { useVeiculos } from "./hooks/useVeiculos";
 import { VeiculoForm } from "./components/VeiculoForm";
 import { VeiculoTable } from "./components/VeiculoTable";
 import { VeiculoFilter } from "./components/VeiculoFilter";
+import { LoginPage } from "./pages/LoginPage";
+import { RegisterPage } from "./pages/RegisterPage";
 import type { Veiculo, VeiculoCreate } from "./types/veiculo";
 
 function formatCurrency(value: string | number): string {
@@ -68,7 +72,8 @@ function SummaryCard({ title, value, description, icon, accentColor }: SummaryCa
   );
 }
 
-export default function App() {
+function Dashboard() {
+  const { user, logout } = useAuth();
   const {
     veiculos,
     loading,
@@ -100,7 +105,7 @@ export default function App() {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Tem certeza que deseja excluir este veículo?")) {
+    if (window.confirm("Tem certeza que deseja excluir este veiculo?")) {
       await deleteVeiculo(id);
     }
   };
@@ -135,14 +140,19 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                Custódia
+                Custodia
               </h1>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Gestão de Busca e Apreensão
+                Gestao de Busca e Apreensao
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {user && (
+              <span className="hidden text-sm text-gray-600 dark:text-gray-300 sm:inline">
+                {user.first_name || user.email}
+              </span>
+            )}
             <button
               onClick={toggleTheme}
               className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
@@ -157,6 +167,15 @@ export default function App() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                 </svg>
               )}
+            </button>
+            <button
+              onClick={logout}
+              className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+              title="Sair"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
             </button>
             {!showForm && (
               <button
@@ -191,9 +210,9 @@ export default function App() {
         {!showForm && veiculos.length > 0 && (
           <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
-              title="Total Veículos"
+              title="Total Veiculos"
               value={String(veiculos.length)}
-              description="Veículos cadastrados no sistema"
+              description="Veiculos cadastrados no sistema"
               accentColor="blue"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -202,9 +221,9 @@ export default function App() {
               }
             />
             <SummaryCard
-              title="Valor Total de Serviços"
+              title="Valor Total de Servicos"
               value={formatCurrency(totalServico)}
-              description="Soma de todos os serviços"
+              description="Soma de todos os servicos"
               accentColor="green"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -256,7 +275,7 @@ export default function App() {
                     Registros
                   </h2>
                   <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-                    {veiculos.length} {veiculos.length === 1 ? "veículo registrado" : "veículos registrados"}
+                    {veiculos.length} {veiculos.length === 1 ? "veiculo registrado" : "veiculos registrados"}
                   </p>
                 </div>
               </div>
@@ -274,5 +293,35 @@ export default function App() {
         )}
       </main>
     </div>
+  );
+}
+
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
+  const [page, setPage] = useState<"login" | "register">("login");
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
+        <div className="text-gray-500 dark:text-gray-400">Carregando...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    if (page === "register") {
+      return <RegisterPage onSwitchToLogin={() => setPage("login")} />;
+    }
+    return <LoginPage onSwitchToRegister={() => setPage("register")} />;
+  }
+
+  return <Dashboard />;
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

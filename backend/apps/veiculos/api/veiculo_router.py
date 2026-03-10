@@ -1,4 +1,5 @@
 from ninja import NinjaAPI, Query
+from ninja_jwt.authentication import JWTAuth
 
 from apps.veiculos.repositories.veiculo_repo import VeiculoRepository
 from apps.veiculos.schemas import (
@@ -11,7 +12,7 @@ from apps.veiculos.schemas import (
 from apps.veiculos.services.history_service import get_vehicle_history
 from apps.veiculos.services.veiculo_service import VeiculoService
 
-api = NinjaAPI(title="Custódia API", version="1.0.0")
+api = NinjaAPI(title="Custódia API", version="1.0.0", auth=JWTAuth())
 
 
 def _get_service() -> VeiculoService:
