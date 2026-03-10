@@ -1,13 +1,18 @@
 from apps.veiculos.models import EventType, VeiculoHistory
 
 
-COST_FIELDS = {"valor_servico", "custo_operacao", "valor_recebido", "valor"}
+COST_FIELDS = {"valor_servico", "custo_operacao", "valor_recebido"}
 PHOTO_FIELDS = {"imagem_url", "imagem_url_2", "imagem_url_3"}
 DATA_FIELDS = {
     "placa", "marca", "modelo", "ano", "acessoria", "data",
-    "data_apreensao", "cidade", "local", "observacoes",
+    "data_apreensao", "cidade", "observacoes",
     "quem_executou", "ano_reg", "semana_iso",
 }
+
+# Legacy fields kept for backward compatibility in the model but excluded
+# from history tracking to avoid duplicate entries with their canonical
+# counterparts (valor → valor_servico, local → cidade, veiculo → marca/modelo).
+LEGACY_FIELDS = {"valor", "veiculo", "local", "total"}
 
 FIELD_LABELS = {
     "placa": "Placa",
@@ -58,6 +63,8 @@ def record_vehicle_changes(veiculo, update_data):
     user = update_data.get("quem_executou") or veiculo.quem_executou or ""
 
     for field, new_val in update_data.items():
+        if field in LEGACY_FIELDS:
+            continue
         old_val = old_values.get(field)
         if old_val is None and new_val is None:
             continue

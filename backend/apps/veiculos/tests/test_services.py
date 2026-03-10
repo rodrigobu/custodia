@@ -1,6 +1,6 @@
 import pytest
 from decimal import Decimal
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from apps.veiculos.services.veiculo_service import VeiculoService
 
@@ -31,7 +31,8 @@ class TestVeiculoService:
         with pytest.raises(ValueError, match="não encontrado"):
             self.service.get_veiculo(1)
 
-    def test_create_veiculo_success(self):
+    @patch("apps.veiculos.services.veiculo_service.record_vehicle_created")
+    def test_create_veiculo_success(self, mock_record):
         self.mock_repo.get_by_placa.return_value = None
         data = {
             "placa": "ABC1234",
@@ -44,6 +45,7 @@ class TestVeiculoService:
         }
         self.service.create_veiculo(data)
         self.mock_repo.create.assert_called_once_with(data)
+        mock_record.assert_called_once()
 
     def test_create_veiculo_duplicate_placa(self):
         self.mock_repo.get_by_placa.return_value = MagicMock()
@@ -78,13 +80,17 @@ class TestVeiculoService:
         with pytest.raises(ValueError, match="negativo"):
             self.service.create_veiculo(data)
 
-    def test_update_veiculo_success(self):
+    @patch("apps.veiculos.services.veiculo_service.record_vehicle_changes")
+    def test_update_veiculo_success(self, mock_record):
         self.mock_repo.update.return_value = MagicMock()
         data = {"status": "liberado"}
         self.service.update_veiculo(1, data)
         self.mock_repo.update.assert_called_once()
+        mock_record.assert_called_once()
 
-    def test_update_veiculo_not_found(self):
+    @patch("apps.veiculos.services.veiculo_service.record_vehicle_changes")
+    def test_update_veiculo_not_found(self, mock_record):
+        self.mock_repo.get_by_id.return_value = MagicMock()
         self.mock_repo.update.return_value = None
         with pytest.raises(ValueError, match="não encontrado"):
             self.service.update_veiculo(1, {"status": "liberado"})
