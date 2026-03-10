@@ -14,9 +14,9 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  apreendido: "bg-red-50 text-red-700 border-red-200",
-  liberado: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  em_processo: "bg-amber-50 text-amber-700 border-amber-200",
+  apreendido: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50",
+  liberado: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/50",
+  em_processo: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50",
 };
 
 function formatCurrency(value: string | number): string {
@@ -36,12 +36,15 @@ function SkeletonRow() {
     <tr className="animate-pulse">
       {Array.from({ length: 10 }).map((_, i) => (
         <td key={i} className="px-4 py-3">
-          <div className="h-4 rounded bg-gray-200" />
+          <div className="h-4 rounded bg-gray-200 dark:bg-gray-700" />
         </td>
       ))}
     </tr>
   );
 }
+
+const thClasses =
+  "px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400";
 
 export function VeiculoTable({
   veiculos,
@@ -54,7 +57,7 @@ export function VeiculoTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-t border-gray-200 bg-gray-50/80">
+            <tr className="border-t border-gray-200 bg-gray-50/80 dark:border-gray-700/50 dark:bg-[#111827]/80">
               {[
                 "Foto",
                 "Placa",
@@ -67,16 +70,13 @@ export function VeiculoTable({
                 "Cidade",
                 "Valor Serviço",
               ].map((h) => (
-                <th
-                  key={h}
-                  className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase"
-                >
+                <th key={h} className={thClasses}>
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700/50">
             {Array.from({ length: 5 }).map((_, i) => (
               <SkeletonRow key={i} />
             ))}
@@ -90,7 +90,7 @@ export function VeiculoTable({
     return (
       <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
         <svg
-          className="mb-4 h-12 w-12 text-gray-300"
+          className="mb-4 h-12 w-12 text-gray-300 dark:text-gray-600"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1"
@@ -102,10 +102,10 @@ export function VeiculoTable({
             d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21M3.375 14.25h1.5a1.5 1.5 0 011.5 1.5v1.5m-3-3V3.375A1.125 1.125 0 014.5 2.25h15A1.125 1.125 0 0120.625 3.375V14.25m-17.25 0h17.25"
           />
         </svg>
-        <p className="text-sm font-medium text-gray-900">
+        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
           Nenhum veículo encontrado
         </p>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Adicione um novo registro ou ajuste os filtros de busca.
         </p>
       </div>
@@ -116,70 +116,34 @@ export function VeiculoTable({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="sticky top-0 z-10 border-t border-gray-200 bg-gray-50/95 backdrop-blur-sm">
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Foto
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Placa
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Marca
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Modelo
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Ano
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Assessoria
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Status
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Data Registro
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Data Apreensão
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Cidade
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Valor Serviço
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Custo Operação
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Valor Recebido
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Ano (Reg)
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Semana ISO
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Quem Executou
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Observações
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium tracking-wide text-gray-500 uppercase">
-              Ações
-            </th>
+          <tr className="sticky top-0 z-10 border-t border-gray-200 bg-gray-50/95 backdrop-blur-sm dark:border-gray-700/50 dark:bg-[#111827]/95">
+            <th className={thClasses}>Foto</th>
+            <th className={thClasses}>Placa</th>
+            <th className={thClasses}>Marca</th>
+            <th className={thClasses}>Modelo</th>
+            <th className={thClasses}>Ano</th>
+            <th className={thClasses}>Assessoria</th>
+            <th className={thClasses}>Status</th>
+            <th className={thClasses}>Data Registro</th>
+            <th className={thClasses}>Data Apreensão</th>
+            <th className={thClasses}>Cidade</th>
+            <th className={`${thClasses} text-right`}>Valor Serviço</th>
+            <th className={`${thClasses} text-right`}>Custo Operação</th>
+            <th className={`${thClasses} text-right`}>Valor Recebido</th>
+            <th className={thClasses}>Ano (Reg)</th>
+            <th className={thClasses}>Semana ISO</th>
+            <th className={thClasses}>Quem Executou</th>
+            <th className={thClasses}>Observações</th>
+            <th className={`${thClasses} text-right`}>Ações</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-gray-100 dark:divide-gray-700/50">
           {veiculos.map((v) => {
             const primeiraFoto = v.imagem_url || v.imagem_url_2 || v.imagem_url_3 || "";
             return (
               <tr
                 key={v.id}
-                className="cursor-pointer transition-colors hover:bg-gray-50/80"
+                className="cursor-pointer transition-colors hover:bg-gray-50/80 dark:hover:bg-gray-800/50"
                 onClick={() => onEdit(v)}
               >
                 <td className="px-4 py-3">
@@ -187,10 +151,10 @@ export function VeiculoTable({
                     <img
                       src={primeiraFoto}
                       alt={`${v.marca || v.veiculo || "Veículo"}`}
-                      className="h-10 w-10 rounded-md border border-gray-200 bg-gray-50 object-cover shadow-sm"
+                      className="h-10 w-10 rounded-md border border-gray-200 bg-gray-50 object-cover shadow-sm dark:border-gray-600 dark:bg-gray-800"
                     />
                   ) : (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-400">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500">
                       <svg
                         className="h-4 w-4"
                         fill="none"
@@ -207,56 +171,56 @@ export function VeiculoTable({
                     </div>
                   )}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 font-mono text-sm font-medium text-gray-900 uppercase">
+                <td className="whitespace-nowrap px-4 py-3 font-mono text-sm font-medium text-gray-900 uppercase dark:text-gray-100">
                   {v.placa}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-700">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-700 dark:text-gray-300">
                   {v.marca || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-700">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-700 dark:text-gray-300">
                   {v.modelo || v.veiculo || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-500">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">
                   {v.ano || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-700">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-700 dark:text-gray-300">
                   {v.acessoria}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <span
-                    className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[v.status] || "bg-gray-50 text-gray-700 border-gray-200"}`}
+                    className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[v.status] || "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600"}`}
                   >
                     {STATUS_LABELS[v.status] || v.status}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-500">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">
                   {formatDate(v.data)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-500">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">
                   {formatDate(v.data_apreensao)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-700">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-700 dark:text-gray-300">
                   {v.cidade || v.local || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-gray-900">
+                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-gray-900 dark:text-gray-100">
                   {formatCurrency(v.valor_servico || v.valor || 0)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-gray-900">
+                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-gray-900 dark:text-gray-100">
                   {formatCurrency(v.custo_operacao || 0)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-emerald-700">
+                <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-emerald-700 dark:text-emerald-400">
                   {formatCurrency(v.valor_recebido || 0)}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-500">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">
                   {v.ano_reg || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-500">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">
                   {v.semana_iso || "—"}
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-700">
+                <td className="whitespace-nowrap px-4 py-3 text-gray-700 dark:text-gray-300">
                   {v.quem_executou || "—"}
                 </td>
-                <td className="max-w-[200px] truncate px-4 py-3 text-gray-500">
+                <td className="max-w-[200px] truncate px-4 py-3 text-gray-500 dark:text-gray-400">
                   {v.observacoes || "—"}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-right">
@@ -266,7 +230,7 @@ export function VeiculoTable({
                         e.stopPropagation();
                         onEdit(v);
                       }}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                       title="Editar"
                     >
                       <svg
@@ -288,7 +252,7 @@ export function VeiculoTable({
                         e.stopPropagation();
                         onDelete(v.id);
                       }}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400"
                       title="Excluir"
                     >
                       <svg

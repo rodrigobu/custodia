@@ -37,15 +37,15 @@ const STATUS_OPTIONS = [
 ] as const;
 
 const STATUS_COLORS: Record<string, string> = {
-  apreendido: "bg-red-50 text-red-700 border-red-200",
-  liberado: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  em_processo: "bg-amber-50 text-amber-700 border-amber-200",
+  apreendido: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50",
+  liberado: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/50",
+  em_processo: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50",
 };
 
 const inputClasses =
-  "block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20";
+  "block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-[#374151] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-primary-400 dark:focus:ring-primary-400/20";
 
-const labelClasses = "mb-1.5 block text-sm font-medium text-gray-700";
+const labelClasses = "mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300";
 
 export function VeiculoForm({
   onSubmit,
@@ -118,10 +118,10 @@ export function VeiculoForm({
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             {initialData ? "Editar Registro" : "Novo Registro"}
           </h2>
-          <p className="mt-0.5 text-sm text-gray-500">
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
             {initialData
               ? "Atualize as informações do veículo e custos"
               : "Preencha os dados do veículo e informações de custos"}
@@ -132,7 +132,7 @@ export function VeiculoForm({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Cancelar
             </button>
@@ -140,7 +140,7 @@ export function VeiculoForm({
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-[#0f172a]"
           >
             {submitting ? (
               <>
@@ -177,7 +177,7 @@ export function VeiculoForm({
       {/* Error */}
       {error && (
         <div
-          className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+          className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400"
           role="alert"
         >
           {error}
@@ -185,11 +185,11 @@ export function VeiculoForm({
       )}
 
       {/* Section 1: Veículo */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-100 px-6 py-4">
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+        <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
           <div className="flex items-center gap-2">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
@@ -201,9 +201,9 @@ export function VeiculoForm({
                 d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21M3.375 14.25h1.5a1.5 1.5 0 011.5 1.5v1.5m-3-3V3.375A1.125 1.125 0 014.5 2.25h15A1.125 1.125 0 0120.625 3.375V14.25m-17.25 0h17.25"
               />
             </svg>
-            <h3 className="text-base font-semibold text-gray-900">Veículo</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">Veículo</h3>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500">
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
             Informações de identificação do veículo
           </p>
         </div>
@@ -271,11 +271,11 @@ export function VeiculoForm({
       </div>
 
       {/* Section 2: Custos / Gastos */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-100 px-6 py-4">
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+        <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
           <div className="flex items-center gap-2">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
@@ -287,11 +287,11 @@ export function VeiculoForm({
                 d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
               />
             </svg>
-            <h3 className="text-base font-semibold text-gray-900">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Custos / Gastos
             </h3>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500">
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
             Dados operacionais e financeiros do processo
           </p>
         </div>
@@ -331,7 +331,7 @@ export function VeiculoForm({
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
-                    className="h-4 w-4 text-gray-400"
+                    className="h-4 w-4 text-gray-400 dark:text-gray-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="2"
@@ -505,11 +505,11 @@ export function VeiculoForm({
       </div>
 
       {/* Section 3: Fotos do Veículo */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-100 px-6 py-4">
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+        <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
           <div className="flex items-center gap-2">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
@@ -526,18 +526,18 @@ export function VeiculoForm({
                 d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
               />
             </svg>
-            <h3 className="text-base font-semibold text-gray-900">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
               Fotos do Veículo
             </h3>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500">
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
             Até 3 fotos do veículo (opcional)
           </p>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500">Foto 1</p>
+              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 1</p>
               <ImageUpload
                 value={form.imagem_url || ""}
                 onChange={(url) =>
@@ -546,7 +546,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500">Foto 2</p>
+              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 2</p>
               <ImageUpload
                 value={form.imagem_url_2 || ""}
                 onChange={(url) =>
@@ -555,7 +555,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500">Foto 3</p>
+              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 3</p>
               <ImageUpload
                 value={form.imagem_url_3 || ""}
                 onChange={(url) =>
