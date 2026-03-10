@@ -86,13 +86,13 @@ describe("VeiculoTable", () => {
     expect(screen.getByText("Liberado")).toBeInTheDocument();
   });
 
-  it("calls onEdit when row is clicked", async () => {
+  it("calls onEdit when edit button is clicked", async () => {
     const user = userEvent.setup();
     const onEdit = vi.fn();
     render(<VeiculoTable veiculos={mockVeiculos} loading={false} onEdit={onEdit} onDelete={vi.fn()} />);
 
-    const rows = screen.getAllByRole("row");
-    await user.click(rows[1]);
+    const editButtons = screen.getAllByTitle("Editar");
+    await user.click(editButtons[0]);
     expect(onEdit).toHaveBeenCalledWith(mockVeiculos[0]);
   });
 
