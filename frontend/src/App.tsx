@@ -30,49 +30,37 @@ function useTheme() {
   return { dark, toggle: () => setDark((d) => !d) };
 }
 
-interface StatCardProps {
-  label: string;
+interface SummaryCardProps {
+  title: string;
   value: string;
+  description: string;
   icon: React.ReactNode;
-  accentColor: "blue" | "green" | "red" | "emerald";
+  accentColor: "blue" | "green" | "amber" | "red";
 }
 
-function StatCard({ label, value, icon, accentColor }: StatCardProps) {
-  const accents = {
-    blue: "border-l-primary-500 dark:border-l-primary-400",
-    green: "border-l-emerald-500 dark:border-l-emerald-400",
-    red: "border-l-red-500 dark:border-l-red-400",
-    emerald: "border-l-emerald-500 dark:border-l-emerald-400",
-  };
-
+function SummaryCard({ title, value, description, icon, accentColor }: SummaryCardProps) {
   const iconBg = {
-    blue: "bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400",
+    blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
     green: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
+    amber: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
     red: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400",
-    emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
-  };
-
-  const valueColor = {
-    blue: "text-gray-900 dark:text-gray-100",
-    green: "text-gray-900 dark:text-gray-100",
-    red: "text-red-600 dark:text-red-400",
-    emerald: "text-emerald-600 dark:text-emerald-400",
   };
 
   return (
-    <div
-      className={`rounded-xl border border-gray-200 border-l-4 bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700/50 dark:bg-[#1f2937] ${accents[accentColor]}`}
-    >
-      <div className="flex items-center justify-between">
+    <div className="rounded-2xl border border-gray-100 bg-white px-6 py-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700/40 dark:bg-[#1e293b]">
+      <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
-            {label}
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+            {title}
           </p>
-          <p className={`mt-2 text-2xl font-semibold tracking-tight ${valueColor[accentColor]}`}>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
             {value}
           </p>
+          <p className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">
+            {description}
+          </p>
         </div>
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg[accentColor]}`}>
+        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${iconBg[accentColor]}`}>
           {icon}
         </div>
       </div>
@@ -126,14 +114,13 @@ export default function App() {
     (sum, v) => sum + Number(v.valor_servico || 0),
     0
   );
-  const totalCusto = veiculos.reduce(
-    (sum, v) => sum + Number(v.custo_operacao || 0),
-    0
-  );
   const totalRecebido = veiculos.reduce(
     (sum, v) => sum + Number(v.valor_recebido || 0),
     0
   );
+  const pendentesApreendidos = veiculos.filter(
+    (v) => v.status === "apreendido" || v.status === "em_processo"
+  ).length;
 
   return (
     <div className="min-h-screen bg-gray-50 transition-colors dark:bg-[#0f172a]">
@@ -202,20 +189,22 @@ export default function App() {
 
         {/* Summary Cards */}
         {!showForm && veiculos.length > 0 && (
-          <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              label="Total Registros"
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <SummaryCard
+              title="Total Veículos"
               value={String(veiculos.length)}
+              description="Veículos cadastrados no sistema"
               accentColor="blue"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
                 </svg>
               }
             />
-            <StatCard
-              label="Valor Serviço"
+            <SummaryCard
+              title="Valor Total de Serviços"
               value={formatCurrency(totalServico)}
+              description="Soma de todos os serviços"
               accentColor="green"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -223,23 +212,25 @@ export default function App() {
                 </svg>
               }
             />
-            <StatCard
-              label="Custo Operação"
-              value={formatCurrency(totalCusto)}
-              accentColor="red"
+            <SummaryCard
+              title="Valor Recebido"
+              value={formatCurrency(totalRecebido)}
+              description="Total de pagamentos recebidos"
+              accentColor="amber"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6L9 12.75l4.286-4.286a11.948 11.948 0 014.306 6.43l.776 2.898m0 0l3.182-5.511m-3.182 5.51l-5.511-3.181" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
                 </svg>
               }
             />
-            <StatCard
-              label="Valor Recebido"
-              value={formatCurrency(totalRecebido)}
-              accentColor="emerald"
+            <SummaryCard
+              title="Pendentes / Apreendidos"
+              value={String(pendentesApreendidos)}
+              description="Em processo ou apreendidos"
+              accentColor="red"
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
               }
             />
