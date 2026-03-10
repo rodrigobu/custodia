@@ -175,9 +175,7 @@ export function VeiculoTable({
         </thead>
         <tbody className="divide-y divide-gray-100">
           {veiculos.map((v) => {
-            const fotos = [v.imagem_url, v.imagem_url_2, v.imagem_url_3].filter(
-              Boolean
-            );
+            const primeiraFoto = v.imagem_url || v.imagem_url_2 || v.imagem_url_3 || "";
             return (
               <tr
                 key={v.id}
@@ -185,24 +183,14 @@ export function VeiculoTable({
                 onClick={() => onEdit(v)}
               >
                 <td className="px-4 py-3">
-                  {fotos.length > 0 ? (
-                    <div className="flex -space-x-2">
-                      {fotos.slice(0, 2).map((url, i) => (
-                        <img
-                          key={i}
-                          src={url}
-                          alt={`${v.marca || v.veiculo} foto ${i + 1}`}
-                          className="h-9 w-9 rounded-lg border-2 border-white object-cover shadow-sm"
-                        />
-                      ))}
-                      {fotos.length > 2 && (
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg border-2 border-white bg-gray-100 text-xs font-medium text-gray-500 shadow-sm">
-                          +{fotos.length - 2}
-                        </div>
-                      )}
-                    </div>
+                  {primeiraFoto ? (
+                    <img
+                      src={primeiraFoto}
+                      alt={`${v.marca || v.veiculo || "Veículo"}`}
+                      className="h-10 w-10 rounded-md border border-gray-200 bg-gray-50 object-cover shadow-sm"
+                    />
                   ) : (
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-400">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 text-gray-400">
                       <svg
                         className="h-4 w-4"
                         fill="none"
