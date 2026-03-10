@@ -1,5 +1,6 @@
-import { useState } from "react";
-import type { VeiculoCreate, Veiculo } from "../../types/veiculo";
+import { useState, useEffect } from "react";
+import type { VeiculoCreate, Veiculo, VeiculoHistoryEntry } from "../../types/veiculo";
+import { veiculoService } from "../../services/veiculoService";
 import { ImageUpload } from "../ImageUpload";
 
 interface VeiculoFormProps {
@@ -85,6 +86,19 @@ export function VeiculoForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<VeiculoHistoryEntry[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialData?.id) {
+      setHistoryLoading(true);
+      veiculoService
+        .getHistory(initialData.id)
+        .then(setHistory)
+        .catch(() => setHistory([]))
+        .finally(() => setHistoryLoading(false));
+    }
+  }, [initialData?.id]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -528,9 +542,58 @@ export function VeiculoForm({
           </div>
         </div>
         <div className="p-6">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Nenhum registro de histórico disponível.
-          </p>
+          {historyLoading ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Carregando histórico...
+            </p>
+          ) : history.length === 0 ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Nenhum registro de histórico disponível.
+            </p>
+          ) : (
+            <div className="space-y-3 max-h-80 overflow-y-auto">
+              {history.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3 dark:border-gray-700/50 dark:bg-gray-800/50"
+                >
+                  <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-medium ${
+                    entry.event_type === "VEHICLE_CREATED"
+                      ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+                      : entry.event_type === "STATUS_CHANGED"
+                        ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
+                        : entry.event_type === "COST_CHANGED"
+                          ? "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+                          : entry.event_type === "PHOTO_ADDED" || entry.event_type === "PHOTO_REMOVED"
+                            ? "bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400"
+                            : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                  }`}>
+                    {entry.event_type === "VEHICLE_CREATED" ? "+" :
+                     entry.event_type === "STATUS_CHANGED" ? "S" :
+                     entry.event_type === "COST_CHANGED" ? "$" :
+                     entry.event_type === "PHOTO_ADDED" || entry.event_type === "PHOTO_REMOVED" ? "F" : "D"}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {entry.description}
+                    </p>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                      <span>
+                        {new Date(entry.created_at).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      {entry.user && <span>por {entry.user}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </form>

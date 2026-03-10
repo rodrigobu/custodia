@@ -91,5 +91,19 @@ class VeiculoResponseSchema(Schema):
         return obj.updated_at.isoformat()
 
 
+class VeiculoHistorySchema(Schema):
+    id: int
+    event_type: str
+    description: str
+    old_value: str
+    new_value: str
+    user: str
+    created_at: str
+
+    @staticmethod
+    def resolve_created_at(obj):
+        return obj.created_at.isoformat()
+
+
 class ErrorSchema(Schema):
     detail: str

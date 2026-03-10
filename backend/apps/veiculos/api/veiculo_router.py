@@ -4,9 +4,11 @@ from apps.veiculos.repositories.veiculo_repo import VeiculoRepository
 from apps.veiculos.schemas import (
     ErrorSchema,
     VeiculoCreateSchema,
+    VeiculoHistorySchema,
     VeiculoResponseSchema,
     VeiculoUpdateSchema,
 )
+from apps.veiculos.services.history_service import get_vehicle_history
 from apps.veiculos.services.veiculo_service import VeiculoService
 
 api = NinjaAPI(title="Custódia API", version="1.0.0")
@@ -71,6 +73,16 @@ def delete_veiculo(request, veiculo_id: int):
         return 204, None
     except ValueError as e:
         return 404, {"detail": str(e)}
+
+
+@api.get("/veiculos/{veiculo_id}/history", response={200: list[VeiculoHistorySchema], 404: ErrorSchema})
+def get_veiculo_history(request, veiculo_id: int):
+    try:
+        _get_service().get_veiculo(veiculo_id)
+    except ValueError as e:
+        return 404, {"detail": str(e)}
+    history = get_vehicle_history(veiculo_id)
+    return 200, list(history)
 
 
 @api.get("/veiculos/total", response={200: dict})

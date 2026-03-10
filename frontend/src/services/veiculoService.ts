@@ -1,4 +1,4 @@
-import type { Veiculo, VeiculoCreate, VeiculoUpdate, VeiculoFilters } from "../types/veiculo";
+import type { Veiculo, VeiculoCreate, VeiculoUpdate, VeiculoFilters, VeiculoHistoryEntry } from "../types/veiculo";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
@@ -52,5 +52,10 @@ export const veiculoService = {
       method: "DELETE",
     });
     return handleResponse<void>(response);
+  },
+
+  async getHistory(id: number): Promise<VeiculoHistoryEntry[]> {
+    const response = await fetch(`${API_URL}/veiculos/${id}/history`);
+    return handleResponse<VeiculoHistoryEntry[]>(response);
   },
 };
