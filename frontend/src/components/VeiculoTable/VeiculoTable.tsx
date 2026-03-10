@@ -54,7 +54,7 @@ function SkeletonRow() {
 }
 
 const thClasses =
-  "px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400";
+  "px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400 bg-gray-50/80 dark:bg-[#111827]/90";
 
 interface DetailRowProps {
   veiculo: Veiculo;
@@ -139,8 +139,8 @@ export function VeiculoTable({
     return (
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead>
-            <tr className="border-t border-gray-100 bg-gray-50/80 dark:border-gray-700/30 dark:bg-[#111827]/50">
+          <thead className="sticky top-0 z-10">
+            <tr className="border-t border-gray-100 dark:border-gray-700/30">
               {["Veículo", "Placa", "Assessoria", "Status", "Data", "Cidade", "Valor Serviço", ""].map((h) => (
                 <th key={h} className={thClasses}>{h}</th>
               ))}
@@ -188,8 +188,8 @@ export function VeiculoTable({
     <>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead>
-            <tr className="border-t border-gray-100 bg-gray-50/80 dark:border-gray-700/30 dark:bg-[#111827]/50">
+          <thead className="sticky top-0 z-10">
+            <tr className="border-t border-gray-100 dark:border-gray-700/30">
               <th className={thClasses}>Veículo</th>
               <th className={thClasses}>Placa</th>
               <th className={thClasses}>Assessoria</th>
