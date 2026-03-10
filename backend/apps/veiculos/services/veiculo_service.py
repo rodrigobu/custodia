@@ -3,6 +3,10 @@ from typing import Any
 
 from apps.veiculos.models import StatusChoices
 from apps.veiculos.repositories.base import BaseVeiculoRepository
+from apps.veiculos.services.history_service import (
+    record_vehicle_changes,
+    record_vehicle_created,
+)
 
 
 VALID_STATUSES = {choice.value for choice in StatusChoices}
@@ -30,7 +34,9 @@ class VeiculoService:
         if existing:
             raise ValueError("Já existe um veículo com esta placa")
 
-        return self._repository.create(data)
+        veiculo = self._repository.create(data)
+        record_vehicle_created(veiculo)
+        return veiculo
 
     def update_veiculo(self, veiculo_id: int, data: dict[str, Any]):
         clean_data = {k: v for k, v in data.items() if v is not None}
@@ -48,6 +54,12 @@ class VeiculoService:
             existing = self._repository.get_by_placa(clean_data["placa"])
             if existing and existing.id != veiculo_id:
                 raise ValueError("Já existe um veículo com esta placa")
+
+        current_veiculo = self._repository.get_by_id(veiculo_id)
+        if not current_veiculo:
+            raise ValueError("Veículo não encontrado")
+
+        record_vehicle_changes(current_veiculo, clean_data)
 
         veiculo = self._repository.update(veiculo_id, clean_data)
         if not veiculo:

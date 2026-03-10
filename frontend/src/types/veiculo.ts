@@ -85,3 +85,13 @@ export interface VeiculoFilters {
   acessoria?: string;
   local?: string;
 }
+
+export interface VeiculoHistoryEntry {
+  id: number;
+  event_type: string;
+  description: string;
+  old_value: string;
+  new_value: string;
+  user: string;
+  created_at: string;
+}
