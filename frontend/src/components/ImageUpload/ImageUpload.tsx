@@ -1,4 +1,5 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { Spinner } from "../Loading";
 
 interface ImageUploadProps {
   value: string;
@@ -74,7 +75,23 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Simulated progress while uploading (visual feedback)
+  useEffect(() => {
+    if (!uploading) {
+      setUploadProgress(0);
+      return;
+    }
+    let current = 0;
+    const interval = setInterval(() => {
+      current += Math.random() * 15;
+      if (current > 90) current = 90;
+      setUploadProgress(current);
+    }, 300);
+    return () => clearInterval(interval);
+  }, [uploading]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -278,30 +295,22 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         />
         <div className="flex flex-col items-center gap-2 text-center">
           {uploading ? (
-            <>
-              <svg
-                className="h-8 w-8 animate-spin text-primary-500"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
+            <div className="flex flex-col items-center gap-3 px-4">
+              <Spinner size="lg" className="text-primary-500" />
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Comprimindo e enviando...
+                Enviando imagem...
               </span>
-            </>
+              {/* Progress bar */}
+              <div className="h-1.5 w-full max-w-[200px] overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                <div
+                  className="h-full rounded-full bg-primary-500 transition-all duration-300 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <span className="text-xs text-gray-400 dark:text-gray-500">
+                {Math.round(uploadProgress)}%
+              </span>
+            </div>
           ) : (
             <>
               <svg

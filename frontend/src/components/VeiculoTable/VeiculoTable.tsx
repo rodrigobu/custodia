@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import type { Veiculo } from "../../types/veiculo";
+import { SkeletonTableRow } from "../Loading";
 
 interface VeiculoTableProps {
   veiculos: Veiculo[];
@@ -41,17 +42,7 @@ function formatDate(dateStr: string | null): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("pt-BR");
 }
 
-function SkeletonRow() {
-  return (
-    <tr className="animate-pulse">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <td key={i} className="px-4 py-3.5">
-          <div className="h-4 rounded-md bg-gray-100 dark:bg-gray-700/50" />
-        </td>
-      ))}
-    </tr>
-  );
-}
+// SkeletonRow is now provided by the Loading component as SkeletonTableRow
 
 const thClasses =
   "px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400 bg-gray-50/80 dark:bg-[#111827]/90";
@@ -147,8 +138,8 @@ export function VeiculoTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700/30">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <SkeletonRow key={i} />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonTableRow key={i} />
             ))}
           </tbody>
         </table>
