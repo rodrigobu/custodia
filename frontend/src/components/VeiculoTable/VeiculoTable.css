@@ -5,6 +5,11 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.dark .table-container {
+  background: #1f2937;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .veiculo-table {
   width: 100%;
   border-collapse: collapse;
@@ -16,6 +21,11 @@
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid #eee;
+}
+
+.dark .veiculo-table th,
+.dark .veiculo-table td {
+  border-bottom-color: #374151;
 }
 
 .veiculo-table th {
@@ -32,6 +42,10 @@
   background: #e8ecf4;
 }
 
+.dark .veiculo-table tr.clickable-row:hover {
+  background: rgba(55, 65, 81, 0.3);
+}
+
 .status-badge {
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
@@ -44,14 +58,29 @@
   color: #842029;
 }
 
+.dark .status-apreendido {
+  background: rgba(153, 27, 27, 0.3);
+  color: #fca5a5;
+}
+
 .status-liberado {
   background: #d1e7dd;
   color: #0f5132;
 }
 
+.dark .status-liberado {
+  background: rgba(6, 95, 70, 0.3);
+  color: #6ee7b7;
+}
+
 .status-em_processo {
   background: #fff3cd;
   color: #664d03;
+}
+
+.dark .status-em_processo {
+  background: rgba(146, 64, 14, 0.3);
+  color: #fcd34d;
 }
 
 .actions {
@@ -103,6 +132,10 @@
   color: #999;
 }
 
+.dark .no-image {
+  color: #6b7280;
+}
+
 .loading,
 .empty {
   text-align: center;
@@ -111,4 +144,11 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .loading,
+.dark .empty {
+  color: #9ca3af;
+  background: #1f2937;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }

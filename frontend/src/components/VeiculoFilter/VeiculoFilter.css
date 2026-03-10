@@ -6,10 +6,19 @@
   margin-bottom: 1.5rem;
 }
 
+.dark .veiculo-filter {
+  background: #1f2937;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .veiculo-filter h3 {
   margin: 0 0 0.75rem;
   color: #1a1a2e;
   font-size: 1rem;
+}
+
+.dark .veiculo-filter h3 {
+  color: #f9fafb;
 }
 
 .filter-grid {
@@ -28,6 +37,13 @@
   min-width: 180px;
 }
 
+.dark .filter-grid input,
+.dark .filter-grid select {
+  border-color: #374151;
+  background: #111827;
+  color: #f9fafb;
+}
+
 .filter-grid input:focus,
 .filter-grid select:focus {
   outline: none;
@@ -42,6 +58,10 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.875rem;
+}
+
+.dark .btn-clear {
+  background: #4b5563;
 }
 
 .btn-clear:hover {

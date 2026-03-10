@@ -6,9 +6,18 @@
   margin-bottom: 1.5rem;
 }
 
+.dark .veiculo-form {
+  background: #1f2937;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .veiculo-form h2 {
   margin: 0 0 1rem;
   color: #1a1a2e;
+}
+
+.dark .veiculo-form h2 {
+  color: #f9fafb;
 }
 
 .form-grid {
@@ -29,12 +38,23 @@
   color: #333;
 }
 
+.dark .form-group label {
+  color: #d1d5db;
+}
+
 .form-group input,
 .form-group select {
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.875rem;
+}
+
+.dark .form-group input,
+.dark .form-group select {
+  border-color: #374151;
+  background: #111827;
+  color: #f9fafb;
 }
 
 .form-group input:focus,
@@ -77,6 +97,10 @@
   background: #6c757d !important;
 }
 
+.dark .btn-cancel {
+  background: #4b5563 !important;
+}
+
 .btn-cancel:hover {
   background: #5a6268 !important;
 }
@@ -87,6 +111,11 @@
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
+}
+
+.dark .form-error {
+  background: rgba(153, 27, 27, 0.2);
+  color: #fca5a5;
 }
 
 .photos-grid {
@@ -105,6 +134,10 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: #666;
+}
+
+.dark .photo-label {
+  color: #9ca3af;
 }
 
 @media (max-width: 768px) {
