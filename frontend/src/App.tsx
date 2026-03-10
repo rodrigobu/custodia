@@ -5,6 +5,7 @@ import { useVeiculos } from "./hooks/useVeiculos";
 import { VeiculoForm } from "./components/VeiculoForm";
 import { VeiculoTable } from "./components/VeiculoTable";
 import { VeiculoFilter } from "./components/VeiculoFilter";
+import { PageLoader, SkeletonCard } from "./components/Loading";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import type { Veiculo, VeiculoCreate } from "./types/veiculo";
@@ -206,8 +207,17 @@ function Dashboard() {
           </div>
         )}
 
+        {/* Summary Cards – skeleton while loading */}
+        {!showForm && loading && (
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
+
         {/* Summary Cards */}
-        {!showForm && veiculos.length > 0 && (
+        {!showForm && !loading && veiculos.length > 0 && (
           <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
               title="Total Veiculos"
@@ -301,11 +311,7 @@ function AppContent() {
   const [page, setPage] = useState<"login" | "register">("login");
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
-        <div className="text-gray-500 dark:text-gray-400">Carregando...</div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!isAuthenticated) {

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Spinner } from "../components/Loading";
 
 interface LoginPageProps {
   onSwitchToRegister: () => void;
@@ -83,7 +84,14 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
               disabled={loading}
               className="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-[#1e293b]"
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <Spinner size="sm" />
+                  Entrando...
+                </span>
+              ) : (
+                "Entrar"
+              )}
             </button>
           </form>
 
