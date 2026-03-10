@@ -7,12 +7,12 @@ describe("VeiculoForm", () => {
   it("renders the form with all fields", () => {
     render(<VeiculoForm onSubmit={vi.fn()} />);
     expect(screen.getByLabelText("Placa")).toBeInTheDocument();
-    expect(screen.getByLabelText("Veículo")).toBeInTheDocument();
-    expect(screen.getByLabelText("Data")).toBeInTheDocument();
-    expect(screen.getByLabelText("Local")).toBeInTheDocument();
+    expect(screen.getByLabelText("Marca / Montadora")).toBeInTheDocument();
+    expect(screen.getByLabelText("Modelo")).toBeInTheDocument();
+    expect(screen.getByLabelText("Ano")).toBeInTheDocument();
     expect(screen.getByLabelText("Assessoria")).toBeInTheDocument();
     expect(screen.getByLabelText("Status")).toBeInTheDocument();
-    expect(screen.getByLabelText("Valor (R$)")).toBeInTheDocument();
+    expect(screen.getByLabelText("Valor Serviço (R$)")).toBeInTheDocument();
   });
 
   it("shows 'Cadastrar' button for new entry", () => {
@@ -24,12 +24,24 @@ describe("VeiculoForm", () => {
     const existing = {
       id: 1,
       placa: "ABC1234",
+      marca: "Fiat",
+      modelo: "Uno",
+      ano: 2020,
       veiculo: "Fiat Uno",
       data: "2024-01-01",
+      data_apreensao: null,
       local: "SP",
+      cidade: "São Paulo",
       acessoria: "Assessoria X",
       status: "apreendido" as const,
       valor: "10000.00",
+      valor_servico: "10000.00",
+      custo_operacao: "0",
+      valor_recebido: "0",
+      observacoes: "",
+      ano_reg: null,
+      semana_iso: null,
+      quem_executou: "",
       total: "10000.00",
       imagem_url: "",
       imagem_url_2: "",
@@ -47,10 +59,10 @@ describe("VeiculoForm", () => {
     render(<VeiculoForm onSubmit={onSubmit} />);
 
     await user.type(screen.getByLabelText("Placa"), "XYZ1234");
-    await user.type(screen.getByLabelText("Veículo"), "Honda Civic");
-    await user.type(screen.getByLabelText("Local"), "São Paulo");
+    await user.type(screen.getByLabelText("Marca / Montadora"), "Honda");
+    await user.type(screen.getByLabelText("Modelo"), "Civic");
     await user.type(screen.getByLabelText("Assessoria"), "Assessoria A");
-    await user.type(screen.getByLabelText("Valor (R$)"), "25000");
+    await user.type(screen.getByLabelText("Valor Serviço (R$)"), "25000");
 
     await user.click(screen.getByRole("button", { name: "Cadastrar" }));
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -62,10 +74,8 @@ describe("VeiculoForm", () => {
     render(<VeiculoForm onSubmit={onSubmit} />);
 
     await user.type(screen.getByLabelText("Placa"), "XYZ1234");
-    await user.type(screen.getByLabelText("Veículo"), "Test");
-    await user.type(screen.getByLabelText("Local"), "SP");
     await user.type(screen.getByLabelText("Assessoria"), "A");
-    await user.type(screen.getByLabelText("Valor (R$)"), "1000");
+    await user.type(screen.getByLabelText("Valor Serviço (R$)"), "1000");
 
     await user.click(screen.getByRole("button", { name: "Cadastrar" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Placa duplicada");

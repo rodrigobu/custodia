@@ -8,21 +8,43 @@ class StatusChoices(models.TextChoices):
 
 
 class Veiculo(models.Model):
+    # Vehicle info
     placa = models.CharField(max_length=10, unique=True)
-    veiculo = models.CharField(max_length=200)
-    data = models.DateField()
-    local = models.CharField(max_length=300)
+    marca = models.CharField(max_length=100, blank=True, default="")
+    modelo = models.CharField(max_length=200, blank=True, default="")
+    ano = models.IntegerField(null=True, blank=True)
+    # Legacy field kept for backward compatibility
+    veiculo = models.CharField(max_length=200, blank=True, default="")
+
+    # Costs / Operations
     acessoria = models.CharField(max_length=200)
     status = models.CharField(
         max_length=20,
         choices=StatusChoices.choices,
         default=StatusChoices.APREENDIDO,
     )
-    valor = models.DecimalField(max_digits=12, decimal_places=2)
+    data = models.DateField()
+    data_apreensao = models.DateField(null=True, blank=True)
+    cidade = models.CharField(max_length=300, blank=True, default="")
+    # Legacy field kept for backward compatibility
+    local = models.CharField(max_length=300, blank=True, default="")
+    valor_servico = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    custo_operacao = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    valor_recebido = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    observacoes = models.TextField(blank=True, default="")
+    ano_reg = models.IntegerField(null=True, blank=True)
+    semana_iso = models.IntegerField(null=True, blank=True)
+    quem_executou = models.CharField(max_length=200, blank=True, default="")
+    # Legacy fields kept for backward compatibility
+    valor = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=12, decimal_places=2, editable=False, default=0)
+
+    # Images
     imagem_url = models.URLField(max_length=500, blank=True, default="")
     imagem_url_2 = models.URLField(max_length=500, blank=True, default="")
     imagem_url_3 = models.URLField(max_length=500, blank=True, default="")
+
+    # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -32,4 +54,5 @@ class Veiculo(models.Model):
         verbose_name_plural = "Veículos"
 
     def __str__(self):
-        return f"{self.placa} - {self.veiculo}"
+        label = f"{self.marca} {self.modelo}".strip() or self.veiculo
+        return f"{self.placa} - {label}"
