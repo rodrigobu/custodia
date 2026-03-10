@@ -7,8 +7,8 @@ describe("VeiculoFilter", () => {
   it("renders all filter fields", () => {
     render(<VeiculoFilter filters={{}} onFilterChange={vi.fn()} />);
     expect(screen.getByPlaceholderText("Buscar por placa...")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Buscar por assessoria...")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Buscar por local...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Assessoria...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Cidade...")).toBeInTheDocument();
     expect(screen.getByText("Todos os status")).toBeInTheDocument();
   });
 
@@ -52,6 +52,6 @@ describe("VeiculoFilter", () => {
       />
     );
     expect(screen.getByPlaceholderText("Buscar por placa...")).toHaveValue("XYZ");
-    expect(screen.getByPlaceholderText("Buscar por assessoria...")).toHaveValue("Test");
+    expect(screen.getByPlaceholderText("Assessoria...")).toHaveValue("Test");
   });
 });

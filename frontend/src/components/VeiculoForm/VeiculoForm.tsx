@@ -37,13 +37,19 @@ const STATUS_OPTIONS = [
 ] as const;
 
 const STATUS_COLORS: Record<string, string> = {
-  apreendido: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50",
-  liberado: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/50",
-  em_processo: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50",
+  apreendido: "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-500/20",
+  liberado: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-500/20",
+  em_processo: "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-500/20",
+};
+
+const STATUS_DOT: Record<string, string> = {
+  apreendido: "bg-red-500",
+  liberado: "bg-emerald-500",
+  em_processo: "bg-amber-500",
 };
 
 const inputClasses =
-  "block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-[#374151] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-primary-400 dark:focus:ring-primary-400/20";
+  "block w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900 transition-all placeholder:text-gray-400 hover:border-gray-300 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-[#374151] dark:bg-[#111827] dark:text-gray-100 dark:placeholder:text-gray-500 dark:hover:border-gray-500 dark:focus:border-primary-400 dark:focus:ring-primary-400/20";
 
 const labelClasses = "mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300";
 
@@ -132,7 +138,7 @@ export function VeiculoForm({
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Cancelar
             </button>
@@ -140,28 +146,13 @@ export function VeiculoForm({
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-[#0f172a]"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-primary-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-[#0f172a]"
           >
             {submitting ? (
               <>
-                <svg
-                  className="h-4 w-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
                 Salvando...
               </>
@@ -177,42 +168,37 @@ export function VeiculoForm({
       {/* Error */}
       {error && (
         <div
-          className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400"
+          className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400"
           role="alert"
         >
-          {error}
+          <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+          </svg>
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Section 1: Veículo */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+      {/* Section 1: Veiculo */}
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
         <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
-          <div className="flex items-center gap-2">
-            <svg
-              className="h-5 w-5 text-gray-400 dark:text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21M3.375 14.25h1.5a1.5 1.5 0 011.5 1.5v1.5m-3-3V3.375A1.125 1.125 0 014.5 2.25h15A1.125 1.125 0 0120.625 3.375V14.25m-17.25 0h17.25"
-              />
-            </svg>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">Veículo</h3>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+              <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21M3.375 14.25h1.5a1.5 1.5 0 011.5 1.5v1.5m-3-3V3.375A1.125 1.125 0 014.5 2.25h15A1.125 1.125 0 0120.625 3.375V14.25m-17.25 0h17.25" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Veículo</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Identificação do veículo
+              </p>
+            </div>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-            Informações de identificação do veículo
-          </p>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <label htmlFor="placa" className={labelClasses}>
-                Placa
-              </label>
+              <label htmlFor="placa" className={labelClasses}>Placa</label>
               <input
                 id="placa"
                 name="placa"
@@ -225,42 +211,36 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <label htmlFor="marca" className={labelClasses}>
-                Marca / Montadora
-              </label>
+              <label htmlFor="marca" className={labelClasses}>Marca / Montadora</label>
               <input
                 id="marca"
                 name="marca"
                 value={form.marca}
                 onChange={handleChange}
-                placeholder="Ex: Toyota, Volkswagen, Fiat"
+                placeholder="Toyota, VW, Fiat..."
                 className={inputClasses}
               />
             </div>
             <div>
-              <label htmlFor="modelo" className={labelClasses}>
-                Modelo
-              </label>
+              <label htmlFor="modelo" className={labelClasses}>Modelo</label>
               <input
                 id="modelo"
                 name="modelo"
                 value={form.modelo}
                 onChange={handleChange}
-                placeholder="Ex: Corolla, Gol, Uno"
+                placeholder="Corolla, Gol, Uno..."
                 className={inputClasses}
               />
             </div>
             <div>
-              <label htmlFor="ano" className={labelClasses}>
-                Ano
-              </label>
+              <label htmlFor="ano" className={labelClasses}>Ano</label>
               <input
                 id="ano"
                 name="ano"
                 type="number"
                 value={form.ano ?? ""}
                 onChange={handleChange}
-                placeholder="Ex: 2024"
+                placeholder="2024"
                 min="1900"
                 max="2099"
                 className={inputClasses}
@@ -270,37 +250,28 @@ export function VeiculoForm({
         </div>
       </div>
 
-      {/* Section 2: Custos / Gastos */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+      {/* Section 2: Operacao */}
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
         <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
-          <div className="flex items-center gap-2">
-            <svg
-              className="h-5 w-5 text-gray-400 dark:text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-              />
-            </svg>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Custos / Gastos
-            </h3>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+              <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Operação</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Dados operacionais do processo
+              </p>
+            </div>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-            Dados operacionais e financeiros do processo
-          </p>
         </div>
-        <div className="p-6">
+        <div className="p-6 space-y-6">
+          {/* Operational info */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <label htmlFor="acessoria" className={labelClasses}>
-                Assessoria
-              </label>
+              <label htmlFor="acessoria" className={labelClasses}>Assessoria</label>
               <input
                 id="acessoria"
                 name="acessoria"
@@ -312,9 +283,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <label htmlFor="status" className={labelClasses}>
-                Status
-              </label>
+              <label htmlFor="status" className={labelClasses}>Status</label>
               <div className="relative">
                 <select
                   id="status"
@@ -324,39 +293,24 @@ export function VeiculoForm({
                   className={inputClasses + " appearance-none pr-10"}
                 >
                   {STATUS_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <svg
-                    className="h-4 w-4 text-gray-400 dark:text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                    />
+                  <svg className="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                   </svg>
                 </div>
               </div>
               <div className="mt-2">
-                <span
-                  className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[form.status]}`}
-                >
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[form.status]}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[form.status]}`} />
                   {STATUS_OPTIONS.find((o) => o.value === form.status)?.label}
                 </span>
               </div>
             </div>
             <div>
-              <label htmlFor="cidade" className={labelClasses}>
-                Cidade
-              </label>
+              <label htmlFor="cidade" className={labelClasses}>Cidade</label>
               <input
                 id="cidade"
                 name="cidade"
@@ -367,9 +321,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <label htmlFor="data" className={labelClasses}>
-                Data Registro
-              </label>
+              <label htmlFor="data" className={labelClasses}>Data Registro</label>
               <input
                 id="data"
                 name="data"
@@ -381,9 +333,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <label htmlFor="data_apreensao" className={labelClasses}>
-                Data Apreensão
-              </label>
+              <label htmlFor="data_apreensao" className={labelClasses}>Data Apreensão</label>
               <input
                 id="data_apreensao"
                 name="data_apreensao"
@@ -394,9 +344,7 @@ export function VeiculoForm({
               />
             </div>
             <div>
-              <label htmlFor="quem_executou" className={labelClasses}>
-                Quem Executou
-              </label>
+              <label htmlFor="quem_executou" className={labelClasses}>Quem Executou</label>
               <input
                 id="quem_executou"
                 name="quem_executou"
@@ -406,167 +354,169 @@ export function VeiculoForm({
                 className={inputClasses}
               />
             </div>
-            <div>
-              <label htmlFor="valor_servico" className={labelClasses}>
-                Valor Serviço (R$)
-              </label>
-              <input
-                id="valor_servico"
-                name="valor_servico"
-                type="number"
-                step="0.01"
-                min="0"
-                value={form.valor_servico}
-                onChange={handleChange}
-                placeholder="0,00"
-                className={`${inputClasses} text-right`}
-              />
+          </div>
+
+          {/* Financial sub-section */}
+          <div>
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-px flex-1 bg-gray-100 dark:bg-gray-700/50" />
+              <span className="text-xs font-medium tracking-wide text-gray-400 uppercase dark:text-gray-500">Financeiro</span>
+              <div className="h-px flex-1 bg-gray-100 dark:bg-gray-700/50" />
             </div>
-            <div>
-              <label htmlFor="custo_operacao" className={labelClasses}>
-                Custo Operação (R$)
-              </label>
-              <input
-                id="custo_operacao"
-                name="custo_operacao"
-                type="number"
-                step="0.01"
-                min="0"
-                value={form.custo_operacao}
-                onChange={handleChange}
-                placeholder="0,00"
-                className={`${inputClasses} text-right`}
-              />
-            </div>
-            <div>
-              <label htmlFor="valor_recebido" className={labelClasses}>
-                Valor Recebido (R$)
-              </label>
-              <input
-                id="valor_recebido"
-                name="valor_recebido"
-                type="number"
-                step="0.01"
-                min="0"
-                value={form.valor_recebido}
-                onChange={handleChange}
-                placeholder="0,00"
-                className={`${inputClasses} text-right`}
-              />
-            </div>
-            <div>
-              <label htmlFor="ano_reg" className={labelClasses}>
-                Ano (Reg)
-              </label>
-              <input
-                id="ano_reg"
-                name="ano_reg"
-                type="number"
-                value={form.ano_reg ?? ""}
-                onChange={handleChange}
-                placeholder="Ex: 2024"
-                min="2000"
-                max="2099"
-                className={inputClasses}
-              />
-            </div>
-            <div>
-              <label htmlFor="semana_iso" className={labelClasses}>
-                Semana ISO (Reg)
-              </label>
-              <input
-                id="semana_iso"
-                name="semana_iso"
-                type="number"
-                value={form.semana_iso ?? ""}
-                onChange={handleChange}
-                placeholder="1–53"
-                min="1"
-                max="53"
-                className={inputClasses}
-              />
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+              <div>
+                <label htmlFor="valor_servico" className={labelClasses}>Valor Serviço (R$)</label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500">R$</span>
+                  <input
+                    id="valor_servico"
+                    name="valor_servico"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.valor_servico}
+                    onChange={handleChange}
+                    placeholder="0,00"
+                    className={`${inputClasses} pl-10 text-right`}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="custo_operacao" className={labelClasses}>Custo Operação (R$)</label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500">R$</span>
+                  <input
+                    id="custo_operacao"
+                    name="custo_operacao"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.custo_operacao}
+                    onChange={handleChange}
+                    placeholder="0,00"
+                    className={`${inputClasses} pl-10 text-right`}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="valor_recebido" className={labelClasses}>Valor Recebido (R$)</label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 dark:text-gray-500">R$</span>
+                  <input
+                    id="valor_recebido"
+                    name="valor_recebido"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.valor_recebido}
+                    onChange={handleChange}
+                    placeholder="0,00"
+                    className={`${inputClasses} pl-10 text-right`}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <div className="mt-5">
-            <label htmlFor="observacoes" className={labelClasses}>
-              Observações
-            </label>
+
+          {/* Registry sub-section */}
+          <div>
+            <div className="mb-4 flex items-center gap-2">
+              <div className="h-px flex-1 bg-gray-100 dark:bg-gray-700/50" />
+              <span className="text-xs font-medium tracking-wide text-gray-400 uppercase dark:text-gray-500">Registro</span>
+              <div className="h-px flex-1 bg-gray-100 dark:bg-gray-700/50" />
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="ano_reg" className={labelClasses}>Ano (Reg)</label>
+                <input
+                  id="ano_reg"
+                  name="ano_reg"
+                  type="number"
+                  value={form.ano_reg ?? ""}
+                  onChange={handleChange}
+                  placeholder="2024"
+                  min="2000"
+                  max="2099"
+                  className={inputClasses}
+                />
+              </div>
+              <div>
+                <label htmlFor="semana_iso" className={labelClasses}>Semana ISO (Reg)</label>
+                <input
+                  id="semana_iso"
+                  name="semana_iso"
+                  type="number"
+                  value={form.semana_iso ?? ""}
+                  onChange={handleChange}
+                  placeholder="1-53"
+                  min="1"
+                  max="53"
+                  className={inputClasses}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Observations */}
+          <div>
+            <label htmlFor="observacoes" className={labelClasses}>Observações</label>
             <textarea
               id="observacoes"
               name="observacoes"
               value={form.observacoes}
               onChange={handleChange}
               placeholder="Informações adicionais sobre o processo..."
-              rows={4}
+              rows={3}
               className={`${inputClasses} resize-y`}
             />
           </div>
         </div>
       </div>
 
-      {/* Section 3: Fotos do Veículo */}
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
+      {/* Section 3: Fotos do Veiculo */}
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-colors dark:border-gray-700/50 dark:bg-[#1f2937]">
         <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-700/50">
-          <div className="flex items-center gap-2">
-            <svg
-              className="h-5 w-5 text-gray-400 dark:text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
-              />
-            </svg>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              Fotos do Veículo
-            </h3>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+              <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Fotos do Veículo</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Até 3 fotos do veículo (opcional)
+              </p>
+            </div>
           </div>
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
-            Até 3 fotos do veículo (opcional)
-          </p>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 1</p>
+              <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">Foto 1</p>
               <ImageUpload
                 value={form.imagem_url || ""}
-                onChange={(url) =>
-                  setForm((prev) => ({ ...prev, imagem_url: url }))
-                }
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url: url }))}
               />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 2</p>
+              <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">Foto 2</p>
               <ImageUpload
                 value={form.imagem_url_2 || ""}
-                onChange={(url) =>
-                  setForm((prev) => ({ ...prev, imagem_url_2: url }))
-                }
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url_2: url }))}
               />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">Foto 3</p>
+              <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">Foto 3</p>
               <ImageUpload
                 value={form.imagem_url_3 || ""}
-                onChange={(url) =>
-                  setForm((prev) => ({ ...prev, imagem_url_3: url }))
-                }
+                onChange={(url) => setForm((prev) => ({ ...prev, imagem_url_3: url }))}
               />
             </div>
           </div>
         </div>
       </div>
-
     </form>
   );
 }
