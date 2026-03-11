@@ -78,10 +78,6 @@ function DetailRow({ veiculo: v, onClose }: DetailRowProps) {
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Ano (Reg)</span>
               <p className="mt-0.5 text-gray-900 dark:text-gray-100">{v.ano_reg || "\u2014"}</p>
             </div>
-            <div>
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Semana ISO</span>
-              <p className="mt-0.5 text-gray-900 dark:text-gray-100">{v.semana_iso || "\u2014"}</p>
-            </div>
             {v.observacoes && (
               <div className="col-span-2">
                 <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Observações</span>

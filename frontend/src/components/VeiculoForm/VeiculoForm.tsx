@@ -429,7 +429,7 @@ export function VeiculoForm({
             </div>
           </div>
 
-          {/* Row 4: Ano (Reg) | Semana ISO (Reg) */}
+          {/* Row 4: Ano (Reg) */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
               <label htmlFor="ano_reg" className={labelClasses}>Ano (Reg)</label>
@@ -442,20 +442,6 @@ export function VeiculoForm({
                 placeholder="2024"
                 min="2000"
                 max="2099"
-                className={inputClasses}
-              />
-            </div>
-            <div>
-              <label htmlFor="semana_iso" className={labelClasses}>Semana ISO (Reg)</label>
-              <input
-                id="semana_iso"
-                name="semana_iso"
-                type="number"
-                value={form.semana_iso ?? ""}
-                onChange={handleChange}
-                placeholder="1-53"
-                min="1"
-                max="53"
                 className={inputClasses}
               />
             </div>
