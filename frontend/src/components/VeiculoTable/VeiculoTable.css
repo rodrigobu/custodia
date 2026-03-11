@@ -63,24 +63,24 @@
   color: #fca5a5;
 }
 
-.status-liberado {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-.dark .status-liberado {
-  background: rgba(6, 95, 70, 0.3);
-  color: #6ee7b7;
-}
-
-.status-em_processo {
+.status-em_busca {
   background: #fff3cd;
   color: #664d03;
 }
 
-.dark .status-em_processo {
+.dark .status-em_busca {
   background: rgba(146, 64, 14, 0.3);
   color: #fcd34d;
+}
+
+.status-localizado {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.dark .status-localizado {
+  background: rgba(6, 95, 70, 0.3);
+  color: #6ee7b7;
 }
 
 .actions {

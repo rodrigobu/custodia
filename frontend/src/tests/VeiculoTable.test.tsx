@@ -53,7 +53,7 @@ const mockVeiculos: Veiculo[] = [
     local: "Rio de Janeiro",
     cidade: "Rio de Janeiro",
     acessoria: "Assessoria Y",
-    status: "liberado",
+    status: "localizado",
     valor: "30000.00",
     valor_servico: "30000.00",
     total: "45000.00",

@@ -125,7 +125,7 @@ function Dashboard() {
     0
   );
   const pendentesApreendidos = veiculos.filter(
-    (v) => v.status === "apreendido" || v.status === "em_processo"
+    (v) => v.status === "apreendido" || v.status === "em_busca"
   ).length;
 
   return (
