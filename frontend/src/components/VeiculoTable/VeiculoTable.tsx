@@ -174,7 +174,7 @@ export function VeiculoTable({
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[800px] text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="border-t border-gray-100 dark:border-gray-700/30">
               <th className={thClasses}>Veículo</th>
@@ -184,7 +184,7 @@ export function VeiculoTable({
               <th className={thClasses}>Data</th>
               <th className={thClasses}>Cidade</th>
               <th className={`${thClasses} text-right`}>Valor Serviço</th>
-              <th className={`${thClasses} text-right`}>Ações</th>
+              <th className={`${thClasses} text-right`} style={{ minWidth: '120px' }}>Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700/30">
@@ -251,14 +251,14 @@ export function VeiculoTable({
                     <td className="whitespace-nowrap px-4 py-3 text-right font-mono text-gray-900 dark:text-gray-100">
                       {formatCurrency(v.valor_servico || v.valor || 0)}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                    <td className="whitespace-nowrap px-4 py-3 text-right" style={{ minWidth: '120px' }}>
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             onEdit(v);
                           }}
-                          className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-primary-900/30 dark:hover:text-primary-400"
+                          className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-primary-50 hover:text-primary-600 dark:text-gray-400 dark:hover:bg-primary-900/30 dark:hover:text-primary-400"
                           title="Editar"
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -270,7 +270,7 @@ export function VeiculoTable({
                             e.stopPropagation();
                             onDelete(v.id);
                           }}
-                          className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400"
+                          className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400"
                           title="Excluir"
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -282,7 +282,7 @@ export function VeiculoTable({
                             e.stopPropagation();
                             setExpandedId(isExpanded ? null : v.id);
                           }}
-                          className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                          className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                           title={isExpanded ? "Recolher" : "Expandir"}
                         >
                           <svg className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
