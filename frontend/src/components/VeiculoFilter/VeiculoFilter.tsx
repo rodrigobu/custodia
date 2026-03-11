@@ -52,8 +52,8 @@ export function VeiculoFilter({ filters, onFilterChange }: VeiculoFilterProps) {
         >
           <option value="">Todos os status</option>
           <option value="apreendido">Apreendido</option>
-          <option value="liberado">Liberado</option>
-          <option value="em_processo">Em Processo</option>
+          <option value="em_busca">Em busca</option>
+          <option value="localizado">Localizado</option>
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
           <svg className="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">

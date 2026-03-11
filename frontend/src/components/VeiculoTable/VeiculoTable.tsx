@@ -11,23 +11,23 @@ interface VeiculoTableProps {
 
 const STATUS_LABELS: Record<string, string> = {
   apreendido: "Apreendido",
-  liberado: "Liberado",
-  em_processo: "Em Processo",
+  em_busca: "Em busca",
+  localizado: "Localizado",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   apreendido:
     "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-500/20",
-  liberado:
-    "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-500/20",
-  em_processo:
+  em_busca:
     "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-500/20",
+  localizado:
+    "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-500/20",
 };
 
 const STATUS_DOT: Record<string, string> = {
   apreendido: "bg-red-500",
-  liberado: "bg-emerald-500",
-  em_processo: "bg-amber-500",
+  em_busca: "bg-amber-500",
+  localizado: "bg-emerald-500",
 };
 
 function formatCurrency(value: string | number): string {

@@ -1,4 +1,4 @@
-export type Status = "apreendido" | "liberado" | "em_processo";
+export type Status = "apreendido" | "em_busca" | "localizado";
 
 export interface Veiculo {
   id: number;

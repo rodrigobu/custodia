@@ -3,8 +3,8 @@ from django.db import models
 
 class StatusChoices(models.TextChoices):
     APREENDIDO = "apreendido", "Apreendido"
-    LIBERADO = "liberado", "Liberado"
-    EM_PROCESSO = "em_processo", "Em Processo"
+    EM_BUSCA = "em_busca", "Em busca"
+    LOCALIZADO = "localizado", "Localizado"
 
 
 class EventType(models.TextChoices):
