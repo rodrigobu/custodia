@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import { useVeiculos } from "./hooks/useVeiculos";
+import { veiculoService } from "./services/veiculoService";
 import { VeiculoForm } from "./components/VeiculoForm";
 import { VeiculoTable } from "./components/VeiculoTable";
 import { VeiculoFilter } from "./components/VeiculoFilter";
 import { PageLoader, SkeletonCard } from "./components/Loading";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
-import type { Veiculo, VeiculoCreate } from "./types/veiculo";
+import type { Veiculo, VeiculoCreate, Status } from "./types/veiculo";
 
 function formatCurrency(value: string | number): string {
   return Number(value).toLocaleString("pt-BR", {
@@ -40,19 +41,57 @@ interface SummaryCardProps {
   value: string;
   description: string;
   icon: React.ReactNode;
-  accentColor: "blue" | "green" | "amber" | "red";
+  accentColor: "blue" | "green" | "amber" | "red" | "orange";
+  onClick?: () => void;
+  active?: boolean;
 }
 
-function SummaryCard({ title, value, description, icon, accentColor }: SummaryCardProps) {
+function SummaryCard({ title, value, description, icon, accentColor, onClick, active }: SummaryCardProps) {
   const iconBg = {
     blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
     green: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
     amber: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
     red: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400",
+    orange: "bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
   };
 
+  const activeBorder = {
+    blue: "border-blue-500 dark:border-blue-400",
+    green: "border-emerald-500 dark:border-emerald-400",
+    amber: "border-amber-500 dark:border-amber-400",
+    red: "border-red-500 dark:border-red-400",
+    orange: "border-orange-500 dark:border-orange-400",
+  };
+
+  const activeBg = {
+    blue: "bg-blue-50/50 dark:bg-blue-900/10",
+    green: "bg-emerald-50/50 dark:bg-emerald-900/10",
+    amber: "bg-amber-50/50 dark:bg-amber-900/10",
+    red: "bg-red-50/50 dark:bg-red-900/10",
+    orange: "bg-orange-50/50 dark:bg-orange-900/10",
+  };
+
+  const activeRing = {
+    blue: "ring-1 ring-blue-500/20",
+    green: "ring-1 ring-emerald-500/20",
+    amber: "ring-1 ring-amber-500/20",
+    red: "ring-1 ring-red-500/20",
+    orange: "ring-1 ring-orange-500/20",
+  };
+
+  const baseClasses = "rounded-2xl border px-6 py-5 shadow-sm transition-all hover:shadow-md";
+  const inactiveClasses = "border-gray-100 bg-white dark:border-gray-700/40 dark:bg-[#1e293b]";
+  const activeClasses = `${activeBorder[accentColor]} ${activeBg[accentColor]} ${activeRing[accentColor]} dark:bg-[#1e293b]`;
+  const clickableClasses = onClick ? "cursor-pointer select-none" : "";
+
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white px-6 py-5 shadow-sm transition-all hover:shadow-md dark:border-gray-700/40 dark:bg-[#1e293b]">
+    <div
+      className={`${baseClasses} ${active ? activeClasses : inactiveClasses} ${clickableClasses}`}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
+    >
       <div className="flex items-start justify-between">
         <div className="min-w-0">
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -124,9 +163,40 @@ function Dashboard() {
     (sum, v) => sum + Number(v.valor_recebido || 0),
     0
   );
-  const pendentesApreendidos = veiculos.filter(
-    (v) => v.status === "apreendido" || v.status === "em_busca"
-  ).length;
+
+  // Status counts — fetched without status filter so counts remain visible when filtered
+  const [statusCounts, setStatusCounts] = useState<Record<Status, number>>({
+    apreendido: 0,
+    em_busca: 0,
+    localizado: 0,
+  });
+
+  const fetchStatusCounts = useCallback(async () => {
+    try {
+      const { status: _excluded, ...filtersWithoutStatus } = filters;
+      const all = await veiculoService.list(filtersWithoutStatus);
+      setStatusCounts({
+        apreendido: all.filter((v) => v.status === "apreendido").length,
+        em_busca: all.filter((v) => v.status === "em_busca").length,
+        localizado: all.filter((v) => v.status === "localizado").length,
+      });
+    } catch {
+      // Keep previous counts on error
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    fetchStatusCounts();
+  }, [fetchStatusCounts]);
+
+  const handleStatusFilter = (status: Status) => {
+    if (filters.status === status) {
+      // Toggle off — clear status filter
+      setFilters({ ...filters, status: "" });
+    } else {
+      setFilters({ ...filters, status });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 transition-colors dark:bg-[#0f172a]">
@@ -207,10 +277,64 @@ function Dashboard() {
           </div>
         )}
 
+        {/* Status Cards – skeleton while loading */}
+        {!showForm && loading && (
+          <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
+
+        {/* Status Filter Cards */}
+        {!showForm && !loading && (
+          <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <SummaryCard
+              title="Apreendido"
+              value={String(statusCounts.apreendido)}
+              description="Veiculos apreendidos"
+              accentColor="orange"
+              active={filters.status === "apreendido"}
+              onClick={() => handleStatusFilter("apreendido")}
+              icon={
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              }
+            />
+            <SummaryCard
+              title="Em Busca"
+              value={String(statusCounts.em_busca)}
+              description="Veiculos em processo de busca"
+              accentColor="amber"
+              active={filters.status === "em_busca"}
+              onClick={() => handleStatusFilter("em_busca")}
+              icon={
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              }
+            />
+            <SummaryCard
+              title="Localizado"
+              value={String(statusCounts.localizado)}
+              description="Veiculos localizados"
+              accentColor="green"
+              active={filters.status === "localizado"}
+              onClick={() => handleStatusFilter("localizado")}
+              icon={
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+            />
+          </div>
+        )}
+
         {/* Summary Cards – skeleton while loading */}
         {!showForm && loading && (
-          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
@@ -218,7 +342,7 @@ function Dashboard() {
 
         {/* Summary Cards */}
         {!showForm && !loading && veiculos.length > 0 && (
-          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
             <SummaryCard
               title="Total Veiculos"
               value={String(veiculos.length)}
@@ -249,17 +373,6 @@ function Dashboard() {
               icon={
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                </svg>
-              }
-            />
-            <SummaryCard
-              title="Pendentes / Apreendidos"
-              value={String(pendentesApreendidos)}
-              description="Em processo ou apreendidos"
-              accentColor="red"
-              icon={
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
               }
             />
